@@ -1,6 +1,6 @@
 # Selenium MCP Server
 
-[![CI](https://github.com/yourusername/selenium-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/selenium-mcp/actions/workflows/ci.yml)
+[![CI](https://github.com/krishnapollu/selenium-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/krishnapollu/selenium-mcp-server/actions/workflows/ci.yml)
 
 A powerful Model Context Protocol (MCP) server that brings Selenium WebDriver automation to AI assistants. This server enables AI tools like Claude Desktop to control web browsers programmatically, making web automation accessible through natural language commands.
 
@@ -73,7 +73,7 @@ For Claude Desktop, add this to your MCP configuration:
 }
 ```
 
-**Note**: Replace `path/to/your/project` with the actual path to your selenium-mcp directory.
+**Note**: Replace `path/to/your/project` with the actual path to your selenium-mcp-server directory.
 
 ## Available Tools
 
@@ -267,7 +267,7 @@ Set up automated checks that navigate to pages and verify content.
 ## Project Structure
 
 ```
-selenium-mcp/
+selenium-mcp-server/
 ├── src/                    # Source code
 │   ├── selenium_mcp_server.py
 │   ├── main.py            # Main entry point
