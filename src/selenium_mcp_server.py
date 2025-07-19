@@ -716,7 +716,16 @@ class SeleniumMCPServer:
                         "additionalProperties": False,
                         "$schema": "http://json-schema.org/draft-07/schema#"
                     }
-                )
+                ),
+                Tool(
+                    name="get_server_version",
+                    description="Returns the current version of the Selenium MCP server",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {},
+                        "additionalProperties": False
+                    }
+                ),
             ]
             return tools
 
@@ -766,6 +775,27 @@ class SeleniumMCPServer:
                     return await self._execute_script(arguments)
                 elif name == "get_page_info":
                     return await self._get_page_info(arguments)
+                elif name == "get_server_version":
+                    try:
+                        try:
+                            from importlib.metadata import version as pkg_version
+                        except ImportError:
+                            from importlib_metadata import version as pkg_version  # type: ignore
+                        try:
+                            version = pkg_version("selenium-mcp-server")
+                        except Exception:
+                            version = "unknown"
+                        return MCPResponse.success(
+                            f"Selenium MCP Server version: {version}",
+                            data={"version": version}
+                        ).to_dict()
+                    except Exception as e:
+                        return MCPResponse.error(
+                            f"Failed to get version: {str(e)}",
+                            error_code="VERSION_LOOKUP_ERROR",
+                            error_type=type(e).__name__,
+                            suggestion="Check package installation"
+                        ).to_dict()
                 else:
                     return MCPResponse.error(
                         f"Unknown tool: {name}",
@@ -1511,6 +1541,22 @@ class SeleniumMCPServer:
 
 async def main():
     """Main entry point for the Selenium MCP server."""
+    # Get and log the current version
+    try:
+        try:
+            from importlib.metadata import version as pkg_version
+        except ImportError:
+            from importlib_metadata import version as pkg_version  # type: ignore
+        try:
+            version = pkg_version("selenium-mcp-server")
+        except Exception:
+            version = "unknown"
+        print(f"🚀 Starting Selenium MCP Server v{version}")
+        logger.info(f"Selenium MCP Server v{version} starting up...")
+    except Exception as e:
+        print(f"🚀 Starting Selenium MCP Server (version unknown)")
+        logger.info(f"Selenium MCP Server starting up (version lookup failed: {e})")
+    
     server = SeleniumMCPServer()
     
     async with stdio_server() as (read_stream, write_stream):
