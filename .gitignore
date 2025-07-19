@@ -150,6 +150,35 @@ downloads/
 temp/
 logs/
 
+# PyPI and package management
+.pypirc
+.pypirc.*
+*.pypirc
+twine.cfg
+setup.cfg
+
+# API Keys and Secrets
+.env
+.env.local
+.env.production
+.env.staging
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+config.json
+credentials.json
+token.json
+api_keys.txt
+secrets.txt
+
+# Browser automation artifacts
+browser_logs/
+selenium_logs/
+webdriver_logs/
+*.log
+
 # Browser driver files
 chromedriver*
 geckodriver*
@@ -175,4 +204,39 @@ Thumbs.db
 # Backup files
 *.bak
 *.backup
-*.old 
+*.old
+
+# Development and testing
+test_results/
+coverage/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE and editor files
+*.sublime-project
+*.sublime-workspace
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.idea/workspace.xml
+.idea/tasks.xml
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Temporary and cache files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.cache/
+.tmp/ 

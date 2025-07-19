@@ -26,7 +26,7 @@ def read_requirements():
 
 setup(
     name="selenium-mcp-server",
-    version="1.0.0",
+    version="1.0.5",
     author="Krishna Pollu",
     author_email="your.email@example.com",
     description="A powerful Model Context Protocol (MCP) server that brings Selenium WebDriver automation to AI assistants",

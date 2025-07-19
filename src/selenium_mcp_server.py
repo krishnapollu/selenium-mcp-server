@@ -25,6 +25,12 @@ from datetime import datetime
 
 from mcp.server import Server
 from mcp.server.models import InitializationOptions
+
+# Create a simple NotificationOptions class since it's not available in the current MCP version
+class NotificationOptions:
+    def __init__(self):
+        self.resources_changed = False
+        self.tools_changed = False
 from mcp.server.stdio import stdio_server
 from mcp.types import (
     CallToolRequest,
@@ -91,7 +97,7 @@ class SeleniumMCPServer:
         """Setup MCP resources for browser status."""
         
         @self.server.list_resources()
-        async def handle_list_resources() -> ListResourcesResult:
+        async def handle_list_resources():
             """List available resources."""
             resources = [
                 Resource(
@@ -107,7 +113,7 @@ class SeleniumMCPServer:
                     mimeType="application/json"
                 )
             ]
-            return ListResourcesResult(resources=resources)
+            return resources
 
         @self.server.read_resource()
         async def handle_read_resource(uri: str) -> ReadResourceResult:
@@ -160,7 +166,7 @@ class SeleniumMCPServer:
         """Register all enhanced Selenium tools with the MCP server."""
 
         @self.server.list_tools()
-        async def handle_list_tools() -> ListToolsResult:
+        async def handle_list_tools():
             """List all available Selenium tools."""
             tools = [
                 # Enhanced browser management
@@ -641,7 +647,7 @@ class SeleniumMCPServer:
                     }
                 )
             ]
-            return ListToolsResult(tools=tools)
+            return tools
 
         @self.server.call_tool()
         async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> CallToolResult:

@@ -43,8 +43,9 @@ The server uses `webdriver-manager` to automatically handle browser drivers, so 
 
 ### 2. Configure Your MCP Client
 
-Use this simple, generic configuration:
+#### For General Users (Recommended)
 
+**Option 1: Simple Configuration (if package is already installed)**
 ```json
 {
   "mcpServers": {
@@ -56,6 +57,34 @@ Use this simple, generic configuration:
 }
 ```
 
+**Option 2: Windows with Auto-Installation**
+```json
+{
+  "mcpServers": {
+    "selenium": {
+      "command": "powershell",
+      "args": ["-Command", "pip install --user selenium-mcp-server; python -m selenium_mcp_server"]
+    }
+  }
+}
+```
+
+**Option 3: Linux/Mac with Auto-Installation**
+```json
+{
+  "mcpServers": {
+    "selenium": {
+      "command": "bash",
+      "args": ["-c", "pip install --user selenium-mcp-server && python -m selenium_mcp_server"]
+    }
+  }
+}
+```
+
+#### For Developers (Local Installation)
+
+If you have the code locally:
+
 **Configuration Locations:**
 - **Cursor AI:** `%USERPROFILE%\.cursor\mcp_config.json` (Windows)
 - **Claude Desktop:** `%APPDATA%\claude-desktop\config.json` (Windows)
@@ -64,14 +93,19 @@ Use this simple, generic configuration:
 ### 3. Test the Server
 
 ```bash
+# For general users
+pip install selenium-mcp-server
+python -m selenium_mcp_server
+
+# For developers
 python -m selenium_mcp_server
 ```
 
 **Note**: 
-- The configuration is generic and works across all platforms
-- No hardcoded paths required
-- Ready-to-use configuration file: `config/mcp_client_config.json`
-- Detailed setup instructions: `config/configuration_guide.md`
+- The package is now available on PyPI for easy installation
+- Works on any machine with Python installed
+- No need to download or clone the repository
+- Ready-to-use configuration files in `config/` directory
 
 ## Available Tools
 
