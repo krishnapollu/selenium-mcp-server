@@ -72,6 +72,77 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+class MCPResponse:
+    """Standardized MCP response wrapper to fix validation errors."""
+    
+    def __init__(self, content: str, structured_data: Optional[Dict[str, Any]] = None, is_error: bool = False):
+        self.content = [{"type": "text", "text": content}]
+        self.structuredContent = structured_data or {}
+        self.isError = is_error
+    
+    def to_dict(self):
+        """Convert to dictionary format that MCP expects."""
+        return {
+            "content": self.content,
+            "structuredContent": self.structuredContent,
+            "isError": self.isError
+        }
+    
+    @classmethod
+    def success(cls, message: str, data: Optional[Dict[str, Any]] = None):
+        """Create a success response."""
+        return cls(
+            content=message,
+            structured_data={
+                "status": "success",
+                "data": data or {},
+                "timestamp": datetime.now().isoformat()
+            }
+        )
+    
+    @classmethod
+    def error(cls, message: str, error_code: Optional[str] = None, error_type: Optional[str] = None, suggestion: Optional[str] = None):
+        """Create an error response."""
+        return cls(
+            content=message,
+            structured_data={
+                "status": "error",
+                "error_code": error_code or "UNKNOWN_ERROR",
+                "error_type": error_type or "Exception",
+                "suggestion": suggestion or "Please check the parameters and try again",
+                "timestamp": datetime.now().isoformat()
+            },
+            is_error=True
+        )
+
+class SeleniumMCPError(Exception):
+    """Custom exception for Selenium MCP errors."""
+    def __init__(self, message: str, error_code: str = None, suggestion: str = None):
+        super().__init__(message)
+        self.error_code = error_code
+        self.suggestion = suggestion
+
+def safe_execute(func):
+    """Decorator to safely execute functions and return proper MCP responses."""
+    async def wrapper(*args, **kwargs):
+        try:
+            return await func(*args, **kwargs)
+        except SeleniumMCPError as e:
+            return MCPResponse.error(
+                str(e), 
+                error_code=e.error_code, 
+                error_type="SeleniumMCPError",
+                suggestion=e.suggestion
+            ).to_dict()
+        except Exception as e:
+            return MCPResponse.error(
+                f"Unexpected error in {func.__name__}: {str(e)}",
+                error_code="UNEXPECTED_ERROR",
+                error_type=type(e).__name__,
+                suggestion="Check the function parameters and try again"
+            ).to_dict()
+    return wrapper
+
 @dataclass
 class BrowserSession:
     """Represents a browser session with metadata."""
@@ -650,7 +721,7 @@ class SeleniumMCPServer:
             return tools
 
         @self.server.call_tool()
-        async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> CallToolResult:
+        async def handle_call_tool(name: str, arguments: Dict[str, Any]):
             """Handle tool calls for enhanced Selenium operations."""
             try:
                 # Update last activity for current session
@@ -696,16 +767,19 @@ class SeleniumMCPServer:
                 elif name == "get_page_info":
                     return await self._get_page_info(arguments)
                 else:
-                    return CallToolResult(
-                        content=[{"type": "text", "text": f"Unknown tool: {name}"}],
-                        isError=True
-                    )
+                    return MCPResponse.error(
+                        f"Unknown tool: {name}",
+                        error_code="UNKNOWN_TOOL",
+                        suggestion="Check the tool name and try again"
+                    ).to_dict()
             except Exception as e:
                 logger.error(f"Error in tool {name}: {str(e)}")
-                return CallToolResult(
-                    content=[{"type": "text", "text": f"Error: {str(e)}"}],
-                    isError=True
-                )
+                return MCPResponse.error(
+                    f"Error in {name}: {str(e)}",
+                    error_code="TOOL_EXECUTION_ERROR",
+                    error_type=type(e).__name__,
+                    suggestion="Check the function parameters and try again"
+                ).to_dict()
 
     def _get_current_driver(self) -> webdriver.Remote:
         """Get the current active WebDriver instance."""
@@ -736,7 +810,7 @@ class SeleniumMCPServer:
         }
         return locator_map.get(by, By.CSS_SELECTOR)
 
-    async def _start_browser(self, arguments: Dict[str, Any]) -> CallToolResult:
+    async def _start_browser(self, arguments: Dict[str, Any]):
         """Start a new browser session with enhanced features."""
         browser = arguments.get("browser", "chrome")
         options = arguments.get("options", {})
@@ -774,10 +848,11 @@ class SeleniumMCPServer:
                 service = FirefoxService(GeckoDriverManager().install())
                 driver = webdriver.Firefox(service=service, options=firefox_options)
             else:
-                return CallToolResult(
-                    content=[{"type": "text", "text": f"Unsupported browser: {browser}"}],
-                    isError=True
-                )
+                return MCPResponse.error(
+                    f"Unsupported browser: {browser}",
+                    error_code="UNSUPPORTED_BROWSER",
+                    suggestion="Use 'chrome' or 'firefox'"
+                ).to_dict()
 
             # Create session with enhanced metadata
             session_id = str(uuid.uuid4())
@@ -793,22 +868,31 @@ class SeleniumMCPServer:
             self.sessions[session_id] = session
             self.current_session_id = session_id
 
-            return CallToolResult(
-                content=[{"type": "text", "text": f"✅ Browser started successfully! Session ID: {session_id}"}]
-            )
+            return MCPResponse.success(
+                f"✅ Browser started successfully! Session ID: {session_id}",
+                data={
+                    "session_id": session_id,
+                    "browser": browser,
+                    "headless": headless,
+                    "options": options
+                }
+            ).to_dict()
 
         except Exception as e:
-            return CallToolResult(
-                content=[{"type": "text", "text": f"❌ Failed to start browser: {str(e)}"}],
-                isError=True
-            )
+            return MCPResponse.error(
+                f"❌ Failed to start browser: {str(e)}",
+                error_code="BROWSER_START_ERROR",
+                error_type=type(e).__name__,
+                suggestion="Check browser installation and try again"
+            ).to_dict()
 
-    async def _list_sessions(self, arguments: Dict[str, Any]) -> CallToolResult:
+    async def _list_sessions(self, arguments: Dict[str, Any]):
         """List all active browser sessions."""
         if not self.sessions:
-            return CallToolResult(
-                content=[{"type": "text", "text": "No active browser sessions"}]
-            )
+            return MCPResponse.success(
+                "No active browser sessions",
+                data={"sessions": []}
+            ).to_dict()
         
         session_list = []
         for session_id, session in self.sessions.items():
@@ -822,9 +906,10 @@ class SeleniumMCPServer:
             }
             session_list.append(session_info)
         
-        return CallToolResult(
-            content=[{"type": "text", "text": json.dumps(session_list, indent=2)}]
-        )
+        return MCPResponse.success(
+            f"Found {len(session_list)} active session(s)",
+            data={"sessions": session_list}
+        ).to_dict()
 
     async def _switch_session(self, arguments: Dict[str, Any]) -> CallToolResult:
         """Switch to a different browser session."""
@@ -875,16 +960,17 @@ class SeleniumMCPServer:
                 isError=True
             )
 
-    async def _navigate(self, arguments: Dict[str, Any]) -> CallToolResult:
+    async def _navigate(self, arguments: Dict[str, Any]):
         """Navigate to a URL with enhanced features."""
         url = arguments.get("url")
         wait_for_load = arguments.get("wait_for_load", True)
         
         if not url:
-            return CallToolResult(
-                content=[{"type": "text", "text": "URL is required"}],
-                isError=True
-            )
+            return MCPResponse.error(
+                "URL is required",
+                error_code="MISSING_URL",
+                suggestion="Provide a valid URL to navigate to"
+            ).to_dict()
 
         try:
             driver = self._get_current_driver()
@@ -901,14 +987,21 @@ class SeleniumMCPServer:
                     lambda d: d.execute_script("return document.readyState") == "complete"
                 )
             
-            return CallToolResult(
-                content=[{"type": "text", "text": f"✅ Successfully navigated to {url}"}]
-            )
+            return MCPResponse.success(
+                f"✅ Successfully navigated to {url}",
+                data={
+                    "url": url,
+                    "wait_for_load": wait_for_load,
+                    "session_id": self.current_session_id
+                }
+            ).to_dict()
         except Exception as e:
-            return CallToolResult(
-                content=[{"type": "text", "text": f"❌ Failed to navigate: {str(e)}"}],
-                isError=True
-            )
+            return MCPResponse.error(
+                f"❌ Failed to navigate: {str(e)}",
+                error_code="NAVIGATION_ERROR",
+                error_type=type(e).__name__,
+                suggestion="Check the URL and try again"
+            ).to_dict()
 
     async def _find_element(self, arguments: Dict[str, Any]) -> CallToolResult:
         """Find an element with enhanced waiting."""
