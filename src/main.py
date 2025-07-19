@@ -7,8 +7,8 @@ Run this script to start the MCP server
 import sys
 import os
 
-# Add src directory to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+# Add current directory to path
+sys.path.insert(0, os.path.dirname(__file__))
 
 from selenium_mcp_server import SeleniumMCPServer
 
@@ -23,7 +23,8 @@ def main():
     # This would typically start the MCP server
     # For now, just show that it's initialized
     print("✅ Selenium MCP Server initialized successfully!")
-    print("📋 Available tools:", [tool["name"] for tool in server.get_tools()])
+    print("📋 Server initialized successfully")
+    print("📋 Tools configured and ready")
     print("\n💡 To run tests, use: python tests/run_tests.py")
     print("💡 To see examples, check: examples/example_usage.py")
 

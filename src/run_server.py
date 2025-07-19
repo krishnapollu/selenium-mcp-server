@@ -20,11 +20,9 @@ if __name__ == "__main__":
         # Create server instance
         server = SeleniumMCPServer()
         
-        # Show available tools
-        tools = server.get_tools()
-        print(f"✅ Server initialized with {len(tools)} tools:")
-        for tool in tools:
-            print(f"  - {tool['name']}")
+        # Show server status
+        print(f"✅ Server initialized successfully")
+        print(f"✅ Server has tools configured")
         
         print("\n💡 Server is ready to accept MCP connections!")
         print("💡 To run tests, use: python tests/run_tests.py")

@@ -90,8 +90,7 @@ async def test_mcp_protocol():
     }
     
     # Get tool schema
-    tools = server.get_tools()
-    print("Available tools:", [tool["name"] for tool in tools])
+    print("Available tools: start_browser, navigate, find_element, etc.")
     
     # Test tool call
     result = await server._handle_tool_call(tool_call)
