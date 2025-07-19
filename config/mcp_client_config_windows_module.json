@@ -6,7 +6,7 @@
       "env": {
         "PYTHONUNBUFFERED": "1",
         "SELENIUM_LOG_LEVEL": "INFO",
-        "PYTHONPATH": "${workspaceRoot}/src"
+        "PYTHONPATH": "C:\\Krishna\\vibe-coding\\selenium-mcp\\src"
       }
     }
   }

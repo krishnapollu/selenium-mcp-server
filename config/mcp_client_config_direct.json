@@ -2,11 +2,10 @@
   "mcpServers": {
     "selenium": {
       "command": "python",
-      "args": ["-m", "selenium_mcp_server"],
+      "args": ["${workspaceRoot}/src/selenium_mcp_server.py"],
       "env": {
         "PYTHONUNBUFFERED": "1",
-        "SELENIUM_LOG_LEVEL": "INFO",
-        "PYTHONPATH": "${workspaceRoot}/src"
+        "SELENIUM_LOG_LEVEL": "INFO"
       }
     }
   }
