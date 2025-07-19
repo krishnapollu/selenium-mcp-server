@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "selenium": {
-      "command": "cmd",
-      "args": ["/c", "pip install --user selenium-mcp-server --quiet && python -m selenium_mcp_server"]
-    }
-  }
-} 

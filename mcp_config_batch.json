@@ -1,7 +1,0 @@
-{
-  "mcpServers": {
-    "selenium": {
-      "command": "start_selenium_mcp.bat"
-    }
-  }
-} 

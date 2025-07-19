@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "selenium": {
-      "command": "python",
-      "args": ["src/selenium_mcp_server.py"]
-    }
-  }
-} 

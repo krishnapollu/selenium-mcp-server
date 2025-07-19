@@ -1,18 +1,18 @@
-# Selenium MCP Server - Generic Setup Guide
+# Selenium MCP Server - Setup Guide
 
 ## 🚀 **Seamless Installation for Any User**
 
 This guide provides a **generic solution** that works across all devices and users without manual installation.
 
-## 📋 **Quick Setup (Recommended)**
+## 📋 **Quick Setup**
 
-### 1. **Download the Launcher**
+### 1. **Download the Files**
 Download these two files to your project directory:
 - `mcp_launcher.py` - Automatic installer and launcher
-- `mcp_config_generic.json` - MCP configuration
+- `mcp.json` - MCP configuration
 
 ### 2. **Configure MCP Client**
-Add this to your MCP configuration file (e.g., `mcp.json`):
+Use the provided `mcp.json` or add this to your existing MCP configuration:
 
 ```json
 {
@@ -43,9 +43,8 @@ The `mcp_launcher.py` script:
 ## 📁 **File Structure**
 ```
 your-project/
-├── mcp_launcher.py          # Automatic launcher
-├── mcp_config_generic.json  # MCP configuration
-└── mcp.json                 # Your MCP config (add the server config here)
+├── mcp_launcher.py    # Automatic launcher
+└── mcp.json          # MCP configuration
 ```
 
 ## 🌟 **Benefits**
