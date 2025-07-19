@@ -6,20 +6,18 @@ on:
     paths:
       - 'src/**'
       - 'tests/**'
-      - 'requirements.txt'
+      - 'pyproject.toml'
       - 'setup.py'
       - '.github/workflows/**'
-      - 'scripts/**'
       - 'config/**'
   pull_request:
     branches: [ main, master ]
     paths:
       - 'src/**'
       - 'tests/**'
-      - 'requirements.txt'
+      - 'pyproject.toml'
       - 'setup.py'
       - '.github/workflows/**'
-      - 'scripts/**'
       - 'config/**'
 
 jobs:
@@ -58,7 +56,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
         restore-keys: |
           ${{ runner.os }}-pip-
           
@@ -67,10 +65,10 @@ jobs:
         python -m ensurepip --upgrade
         python -m pip install --upgrade pip setuptools wheel
         pip --version
-        echo "Installing dependencies from requirements.txt..."
-        pip install -r requirements.txt || {
+        echo "Installing dependencies from pyproject.toml..."
+        pip install -e . || {
           echo "Failed to install dependencies. Trying alternative approach..."
-          python -m pip install --user -r requirements.txt
+          python -m pip install --user -e .
         }
         
         echo "Verifying installed packages..."
