@@ -51,6 +51,7 @@ Homepage = "https://github.com/krishnapollu/selenium-mcp-server"
 Repository = "https://github.com/krishnapollu/selenium-mcp-server"
 Documentation = "https://github.com/krishnapollu/selenium-mcp-server#readme"
 "Bug Reports" = "https://github.com/krishnapollu/selenium-mcp-server/issues"
+"PyPI" = "https://pypi.org/project/selenium-mcp-server/"
 
 [project.scripts]
 selenium-mcp-server = "selenium_mcp_server:main"

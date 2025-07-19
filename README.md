@@ -1,6 +1,10 @@
 # Selenium MCP Server
 
 [![CI](https://github.com/krishnapollu/selenium-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/krishnapollu/selenium-mcp-server/actions/workflows/ci.yml)
+[![PyPI version](https://badge.fury.io/py/selenium-mcp-server.svg)](https://badge.fury.io/py/selenium-mcp-server)
+[![PyPI downloads](https://img.shields.io/pypi/dm/selenium-mcp-server.svg)](https://pypi.org/project/selenium-mcp-server/)
+[![Python versions](https://img.shields.io/pypi/pyversions/selenium-mcp-server.svg)](https://pypi.org/project/selenium-mcp-server/)
+[![License](https://img.shields.io/pypi/l/selenium-mcp-server.svg)](https://pypi.org/project/selenium-mcp-server/)
 
 A powerful Model Context Protocol (MCP) server that brings Selenium WebDriver automation to AI assistants. This server enables AI tools like Claude Desktop to control web browsers programmatically, making web automation accessible through natural language commands.
 
@@ -31,15 +35,42 @@ Specific error messages that actually help you debug issues, rather than generic
 ### 📊 **Session Management**
 List, switch between, and manage multiple browser sessions with detailed metadata tracking.
 
-## Quick Start
+## 📦 Installation
 
-### 1. Install the Package
+### From PyPI (Recommended)
 
 ```bash
+pip install selenium-mcp-server
+```
+
+**Package Links:**
+- **PyPI**: https://pypi.org/project/selenium-mcp-server/
+- **Download**: https://pypi.org/project/selenium-mcp-server/#files
+- **Source**: https://github.com/krishnapollu/selenium-mcp-server
+
+### From Source (Development)
+
+```bash
+git clone https://github.com/krishnapollu/selenium-mcp-server.git
+cd selenium-mcp-server
 pip install -e .
 ```
 
 The server uses `webdriver-manager` to automatically handle browser drivers, so you don't need to manually download ChromeDriver or GeckoDriver.
+
+## 🚀 Quick Start
+
+### 1. Install the Package
+
+```bash
+# From PyPI (recommended)
+pip install selenium-mcp-server
+
+# Or from source
+git clone https://github.com/krishnapollu/selenium-mcp-server.git
+cd selenium-mcp-server
+pip install -e .
+```
 
 ### 2. Configure Your MCP Client
 
