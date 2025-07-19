@@ -56,16 +56,17 @@ python src/selenium_mcp_server.py
 
 ### 3. Configure Your MCP Client
 
-For Claude Desktop, add this to your MCP configuration:
+#### Option 1: Using the Installed Package (Recommended)
+
+If you've installed the package with `pip install -e .`, use this configuration:
 
 ```json
 {
   "mcpServers": {
     "selenium": {
       "command": "python",
-      "args": ["path/to/your/project/src/selenium_mcp_server.py"],
+      "args": ["-m", "selenium_mcp_server"],
       "env": {
-        "PYTHONPATH": "path/to/your/project/src",
         "PYTHONUNBUFFERED": "1"
       }
     }
@@ -73,7 +74,64 @@ For Claude Desktop, add this to your MCP configuration:
 }
 ```
 
-**Note**: Replace `path/to/your/project` with the actual path to your selenium-mcp-server directory.
+#### Option 2: Direct Path Configuration
+
+For direct file execution, use the absolute path to your project:
+
+**Windows:**
+```json
+{
+  "mcpServers": {
+    "selenium": {
+      "command": "python",
+      "args": ["C:\\path\\to\\selenium-mcp-server\\src\\selenium_mcp_server.py"],
+      "env": {
+        "PYTHONPATH": "C:\\path\\to\\selenium-mcp-server\\src",
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}
+```
+
+**macOS/Linux:**
+```json
+{
+  "mcpServers": {
+    "selenium": {
+      "command": "python",
+      "args": ["/path/to/selenium-mcp-server/src/selenium_mcp_server.py"],
+      "env": {
+        "PYTHONPATH": "/path/to/selenium-mcp-server/src",
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}
+```
+
+#### Option 3: Using the Console Script
+
+If you've installed the package, you can also use the console script:
+
+```json
+{
+  "mcpServers": {
+    "selenium": {
+      "command": "selenium-mcp-server"
+    }
+  }
+}
+```
+
+**Note**: 
+- Replace the paths with your actual project location
+- The `PYTHONPATH` should point to the `src` directory
+- Option 1 (installed package) is recommended for easier setup
+- Ready-to-use configuration files are available in the `config/` directory:
+  - `config/mcp_client_config.json` - For Cursor AI, Claude Desktop, and other MCP clients
+  - `config/mcp_config.json` - General MCP configuration
+  - `config/configuration_guide.md` - Detailed setup instructions
 
 ## Available Tools
 

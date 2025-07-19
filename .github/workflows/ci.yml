@@ -3,8 +3,24 @@ name: CI
 on:
   push:
     branches: [ main, master, develop ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'requirements.txt'
+      - 'setup.py'
+      - '.github/workflows/**'
+      - 'scripts/**'
+      - 'config/**'
   pull_request:
     branches: [ main, master ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'requirements.txt'
+      - 'setup.py'
+      - '.github/workflows/**'
+      - 'scripts/**'
+      - 'config/**'
 
 jobs:
   test:
