@@ -1422,7 +1422,7 @@ async def main():
                 server_name="selenium-mcp",
                 server_version="2.0.0",
                 capabilities=server.server.get_capabilities(
-                    notification_options=None,
+                    notification_options=NotificationOptions(),
                     experimental_capabilities=None,
                 ),
             ),

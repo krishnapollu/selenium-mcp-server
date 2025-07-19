@@ -33,105 +33,45 @@ List, switch between, and manage multiple browser sessions with detailed metadat
 
 ## Quick Start
 
-### 1. Install Dependencies
+### 1. Install the Package
 
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
 
 The server uses `webdriver-manager` to automatically handle browser drivers, so you don't need to manually download ChromeDriver or GeckoDriver.
 
-### 2. Run the Server
+### 2. Configure Your MCP Client
+
+Use this simple, generic configuration:
+
+```json
+{
+  "mcpServers": {
+    "selenium": {
+      "command": "python",
+      "args": ["-m", "selenium_mcp_server"]
+    }
+  }
+}
+```
+
+**Configuration Locations:**
+- **Cursor AI:** `%USERPROFILE%\.cursor\mcp_config.json` (Windows)
+- **Claude Desktop:** `%APPDATA%\claude-desktop\config.json` (Windows)
+- **Other MCP Clients:** Check your client's documentation
+
+### 3. Test the Server
 
 ```bash
-# From the root directory (recommended)
-python src/main.py
-
-# Or use the server runner
-python src/run_server.py
-
-# Or directly from src
-python src/selenium_mcp_server.py
-```
-
-### 3. Configure Your MCP Client
-
-#### Option 1: Using the Installed Package (Recommended)
-
-If you've installed the package with `pip install -e .`, use this configuration:
-
-```json
-{
-  "mcpServers": {
-    "selenium": {
-      "command": "python",
-      "args": ["-m", "selenium_mcp_server"],
-      "env": {
-        "PYTHONUNBUFFERED": "1"
-      }
-    }
-  }
-}
-```
-
-#### Option 2: Direct Path Configuration
-
-For direct file execution, use the absolute path to your project:
-
-**Windows:**
-```json
-{
-  "mcpServers": {
-    "selenium": {
-      "command": "python",
-      "args": ["C:\\path\\to\\selenium-mcp-server\\src\\selenium_mcp_server.py"],
-      "env": {
-        "PYTHONPATH": "C:\\path\\to\\selenium-mcp-server\\src",
-        "PYTHONUNBUFFERED": "1"
-      }
-    }
-  }
-}
-```
-
-**macOS/Linux:**
-```json
-{
-  "mcpServers": {
-    "selenium": {
-      "command": "python",
-      "args": ["/path/to/selenium-mcp-server/src/selenium_mcp_server.py"],
-      "env": {
-        "PYTHONPATH": "/path/to/selenium-mcp-server/src",
-        "PYTHONUNBUFFERED": "1"
-      }
-    }
-  }
-}
-```
-
-#### Option 3: Using the Console Script
-
-If you've installed the package, you can also use the console script:
-
-```json
-{
-  "mcpServers": {
-    "selenium": {
-      "command": "selenium-mcp-server"
-    }
-  }
-}
+python -m selenium_mcp_server
 ```
 
 **Note**: 
-- Replace the paths with your actual project location
-- The `PYTHONPATH` should point to the `src` directory
-- Option 1 (installed package) is recommended for easier setup
-- Ready-to-use configuration files are available in the `config/` directory:
-  - `config/mcp_client_config.json` - For Cursor AI, Claude Desktop, and other MCP clients
-  - `config/mcp_config.json` - General MCP configuration
-  - `config/configuration_guide.md` - Detailed setup instructions
+- The configuration is generic and works across all platforms
+- No hardcoded paths required
+- Ready-to-use configuration file: `config/mcp_client_config.json`
+- Detailed setup instructions: `config/configuration_guide.md`
 
 ## Available Tools
 

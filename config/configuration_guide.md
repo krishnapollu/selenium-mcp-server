@@ -104,53 +104,54 @@ Copy the configuration from `config/mcp_client_config.json` to your MCP client's
 **Cursor AI:** `~/.cursor/mcp_config.json` or your Cursor AI MCP configuration location
 **Other MCP Clients:** Check your client's documentation for the config file location
 
-### Cursor AI Specific Setup
+### Installation and Setup
 
-If you're using Cursor AI and seeing "0 tools enabled", try these solutions:
-
-1. **Use the direct script configuration:**
-   ```json
-   {
-     "mcpServers": {
-       "selenium": {
-         "command": "python",
-         "args": ["/absolute/path/to/your/project/src/selenium_mcp_server.py"],
-         "env": {
-           "PYTHONUNBUFFERED": "1",
-           "SELENIUM_LOG_LEVEL": "INFO"
-         }
-       }
-     }
-   }
-   ```
-
-2. **Or use the module approach with absolute path:**
-   ```json
-   {
-     "mcpServers": {
-       "selenium": {
-         "command": "python",
-         "args": ["-m", "selenium_mcp_server"],
-         "env": {
-           "PYTHONUNBUFFERED": "1",
-           "SELENIUM_LOG_LEVEL": "INFO",
-           "PYTHONPATH": "/absolute/path/to/your/project/src"
-         }
-       }
-     }
-   }
-   ```
-
-3. **Make sure the package is installed:**
+1. **Install the package:**
    ```bash
    pip install -e .
    ```
 
-**Note:** Replace `/absolute/path/to/your/project` with your actual project path.
+2. **Use the generic configuration:**
+   ```json
+   {
+     "mcpServers": {
+       "selenium": {
+         "command": "python",
+         "args": ["-m", "selenium_mcp_server"]
+       }
+     }
+   }
+   ```
 
-**Windows Users:** Use the Windows-specific configuration files:
-- `config/mcp_client_config_windows.json` - Direct script approach
-- `config/mcp_client_config_windows_module.json` - Module approach
+### Troubleshooting "0 Tools Enabled"
+
+If you're seeing "0 tools enabled" in Cursor AI:
+
+1. **Make sure the package is installed:**
+   ```bash
+   pip install -e .
+   ```
+
+2. **Verify the module works:**
+   ```bash
+   python -c "import selenium_mcp_server; print('Module found!')"
+   ```
+
+3. **Check if the entry point works:**
+   ```bash
+   selenium-mcp-server --help
+   ```
+
+4. **Alternative: Use the console script entry point:**
+   ```json
+   {
+     "mcpServers": {
+       "selenium": {
+         "command": "selenium-mcp-server"
+       }
+     }
+   }
+   ```
 
 
 
