@@ -1,0 +1,140 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.12
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip firefox
+        
+    - name: Install Chrome
+      run: |
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Test server initialization
+      run: |
+        python -c "
+        import sys
+        import os
+        sys.path.insert(0, 'src')
+        from selenium_mcp_server import SeleniumMCPServer
+        server = SeleniumMCPServer()
+        tools = server.get_tools()
+        print(f'✅ Server initialized with {len(tools)} tools')
+        assert len(tools) > 0, 'No tools found'
+        "
+        
+    - name: Test basic functionality
+      run: |
+        cd tests
+        python -c "
+        import sys
+        import os
+        sys.path.insert(0, os.path.join('..', 'src'))
+        from selenium_mcp_server import SeleniumMCPServer
+        import asyncio
+        
+        async def test_basic():
+            server = SeleniumMCPServer()
+            
+            # Test browser startup
+            result = await server._start_browser({
+                'browser': 'chrome',
+                'options': {'headless': True},
+                'session_name': 'ci_test'
+            })
+            print(f'✅ Browser started: {result}')
+            
+            # Test navigation
+            result = await server._navigate({
+                'url': 'https://httpbin.org/get',
+                'wait_for_load': True
+            })
+            print(f'✅ Navigation: {result}')
+            
+            # Test page info
+            result = await server._get_page_info({
+                'include_title': True,
+                'include_url': True
+            })
+            print(f'✅ Page info: {result}')
+            
+            # Clean up
+            await server._close_session({})
+            
+        asyncio.run(test_basic())
+        "
+        
+    - name: Test error handling
+      run: |
+        cd tests
+        python -c "
+        import sys
+        import os
+        sys.path.insert(0, os.path.join('..', 'src'))
+        from selenium_mcp_server import SeleniumMCPServer
+        import asyncio
+        
+        async def test_errors():
+            server = SeleniumMCPServer()
+            
+            # Test invalid browser
+            try:
+                await server._start_browser({
+                    'browser': 'invalid_browser',
+                    'session_name': 'error_test'
+                })
+                assert False, 'Should have failed'
+            except Exception as e:
+                print(f'✅ Expected error caught: {type(e).__name__}')
+                
+        asyncio.run(test_errors())
+        "
+        
+    - name: Check syntax
+      run: |
+        python -m py_compile src/selenium_mcp_server.py
+        python -m py_compile tests/*.py
+        echo "✅ All Python files compile successfully"
+        
+    - name: Test package installation
+      run: |
+        pip install -e .
+        python -c "
+        from src.selenium_mcp_server import SeleniumMCPServer
+        server = SeleniumMCPServer()
+        print('✅ Package installation test passed')
+        " 

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "selenium": {
+      "command": "python",
+      "args": ["selenium_mcp_server.py"],
+      "env": {
+        "PYTHONPATH": ".",
+        "PYTHONUNBUFFERED": "1",
+        "SELENIUM_LOG_LEVEL": "INFO"
+      }
+    }
+  }
+} 
