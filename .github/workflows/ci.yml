@@ -19,6 +19,13 @@ jobs:
       with:
         python-version: 3.12
         
+    - name: Verify Python environment
+      run: |
+        python --version
+        which python
+        python -c "import sys; print('Python executable:', sys.executable)"
+        python -c "import sys; print('Python path:', sys.path)"
+        
     - name: Install system dependencies
       run: |
         sudo apt-get update
@@ -41,8 +48,17 @@ jobs:
           
     - name: Install Python dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        python -m ensurepip --upgrade
+        python -m pip install --upgrade pip setuptools wheel
+        pip --version
+        echo "Installing dependencies from requirements.txt..."
+        pip install -r requirements.txt || {
+          echo "Failed to install dependencies. Trying alternative approach..."
+          python -m pip install --user -r requirements.txt
+        }
+        
+        echo "Verifying installed packages..."
+        pip list | grep -E "(mcp|selenium|webdriver|pydantic)"
         
     - name: Test server initialization
       run: |
