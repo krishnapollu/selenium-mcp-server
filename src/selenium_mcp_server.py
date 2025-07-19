@@ -1543,18 +1543,30 @@ async def main():
     """Main entry point for the Selenium MCP server."""
     # Get and log the current version
     try:
+        # First try to get version from pyproject.toml (for development)
+        import toml
         try:
-            from importlib.metadata import version as pkg_version
-        except ImportError:
-            from importlib_metadata import version as pkg_version  # type: ignore
-        try:
-            version = pkg_version("selenium-mcp-server")
+            with open("pyproject.toml", "r") as f:
+                pyproject_data = toml.load(f)
+                version = pyproject_data.get("project", {}).get("version", "unknown")
+                print(f"Starting Selenium MCP Server v{version} (development)")
+                logger.info(f"Selenium MCP Server v{version} starting up (development)...")
         except Exception:
-            version = "unknown"
-        print(f"🚀 Starting Selenium MCP Server v{version}")
-        logger.info(f"Selenium MCP Server v{version} starting up...")
+            # Fallback to package metadata
+            try:
+                from importlib.metadata import version as pkg_version
+            except ImportError:
+                from importlib_metadata import version as pkg_version  # type: ignore
+            try:
+                version = pkg_version("selenium-mcp-server")
+                print(f"Starting Selenium MCP Server v{version}")
+                logger.info(f"Selenium MCP Server v{version} starting up...")
+            except Exception:
+                version = "unknown"
+                print(f"Starting Selenium MCP Server v{version}")
+                logger.info(f"Selenium MCP Server v{version} starting up...")
     except Exception as e:
-        print(f"🚀 Starting Selenium MCP Server (version unknown)")
+        print(f"Starting Selenium MCP Server (version unknown)")
         logger.info(f"Selenium MCP Server starting up (version lookup failed: {e})")
     
     server = SeleniumMCPServer()
