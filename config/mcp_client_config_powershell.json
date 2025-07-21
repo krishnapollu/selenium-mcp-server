@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "selenium": {
-      "command": "powershell",
-      "args": ["-Command", "pip install --user selenium-mcp-server; python -m selenium_mcp_server"]
-    }
-  }
-} 

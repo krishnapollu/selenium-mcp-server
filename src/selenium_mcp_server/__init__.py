@@ -7,6 +7,6 @@ __version__ = "1.0.0"
 __author__ = "Your Name"
 __description__ = "A powerful MCP server that brings Selenium WebDriver automation to AI assistants"
 
-from .selenium_mcp_server import SeleniumMCPServer
+from .selenium_mcp_server import SeleniumMCPServer, main
 
-__all__ = ["SeleniumMCPServer"] 
+__all__ = ["SeleniumMCPServer", "main"] 

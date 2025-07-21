@@ -2,7 +2,7 @@
   "mcpServers": {
     "selenium": {
       "command": "python",
-      "args": ["mcp_launcher.py"]
+      "args": ["-m", "selenium_mcp_server"]
     }
   }
 } 

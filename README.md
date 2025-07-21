@@ -6,97 +6,49 @@
 [![Python versions](https://img.shields.io/pypi/pyversions/selenium-mcp-server.svg)](https://pypi.org/project/selenium-mcp-server/)
 [![License](https://img.shields.io/pypi/l/selenium-mcp-server.svg)](https://pypi.org/project/selenium-mcp-server/)
 
-A powerful Model Context Protocol (MCP) server that brings Selenium WebDriver automation to AI assistants. This server enables AI tools like Claude Desktop to control web browsers programmatically, making web automation accessible through natural language commands.
+A powerful Model Context Protocol (MCP) server that brings Selenium WebDriver automation to AI assistants. This server enables AI tools like Claude Desktop and Cursor AI to control web browsers programmatically, making web automation accessible through natural language commands.
 
-## 🆕 **What's New in v1.1.0**
+---
 
-### ✅ **Critical Fixes**
-- **Fixed 20 validation errors** that were blocking all functionality
-- **Resolved response format issues** causing MCP client failures
-- **Implemented structured error handling** with error codes and suggestions
-- **Standardized response format** across all functions
+## 📚 Table of Contents
+- [Features](#-features)
+- [Quick Start](#-quick-start)
+- [Getting Started](#-getting-started)
+- [Client Integration](#-client-integration)
+- [Available Tools & Examples](#-available-tools--examples)
+- [Advanced Configuration](#-advanced-configuration)
+- [Environment Variables](#-environment-variables)
+- [Testing Your Configuration](#-testing-your-configuration)
+- [FAQ / Troubleshooting](#-faq--troubleshooting)
+- [Contributing](#-contributing)
+- [Changelog](#-changelog)
+- [Project Structure](#project-structure)
+- [License](#license)
+- [Contact & Support](#contact--support)
 
-### 🚀 **Enhanced Features**
-- **MCPResponse wrapper** for consistent response formatting
-- **Better error messages** with actionable suggestions
-- **Improved session management** with detailed metadata
-- **Robust error recovery** mechanisms
+---
 
-### 📊 **Quality Improvements**
-- **100% success rate** for valid function calls
-- **Zero validation errors** in production use
-- **Consistent response structure** across all tools
-- **Enhanced debugging capabilities**
+## 🚀 Features
+- Multi-browser support: Chrome and Firefox (headless or full mode)
+- Session management: Start, list, switch, and close browser sessions
+- Navigation: Go to URLs, reload, and retrieve page info
+- Element interaction: Find, click, type, hover, drag-and-drop, double/right click, upload files
+- Advanced actions: Execute JavaScript, take screenshots, get/set element text
+- File operations: Upload files, download files, take full-page screenshots
+- Robust error handling
+- Easy integration with any MCP-compatible client (Cursor AI, Claude Desktop, Google Gemini, etc.)
+- PEP 517/518 compliant packaging
 
-## What This Does
+---
 
-Ever wanted to tell an AI assistant to "go to Google, search for something, and take a screenshot"? This MCP server makes that possible. It provides a bridge between AI assistants and web browsers, allowing for sophisticated web automation workflows.
-
-## Key Features
-
-### 🚀 **Multiple Browser Sessions**
-Run multiple browsers simultaneously - perfect for comparing different websites or handling complex workflows that require multiple browser instances.
-
-### 🎯 **Smart Element Interaction**
-- Find and interact with elements using various locator strategies
-- Enhanced waiting mechanisms that actually work
-- Force click with JavaScript fallback when normal clicks fail
-- Type text with configurable speed (useful for avoiding detection)
-
-### ⚡ **JavaScript Execution**
-Execute custom JavaScript code directly in the browser - great for advanced interactions, data extraction, or custom automation logic.
-
-### 📸 **Screenshot & File Operations**
-Take screenshots (including full-page captures) and upload files with ease.
-
-### 🛡️ **Robust Error Handling**
-Specific error messages that actually help you debug issues, rather than generic failures.
-
-### 📊 **Session Management**
-List, switch between, and manage multiple browser sessions with detailed metadata tracking.
-
-## 📦 Installation
-
-### From PyPI (Recommended)
+## ⚡ Quick Start
 
 ```bash
 pip install selenium-mcp-server
+python -m selenium_mcp_server
 ```
 
-**Package Links:**
-- **PyPI**: https://pypi.org/project/selenium-mcp-server/
-- **Download**: https://pypi.org/project/selenium-mcp-server/#files
-- **Source**: https://github.com/krishnapollu/selenium-mcp-server
-
-### From Source (Development)
-
-```bash
-git clone https://github.com/krishnapollu/selenium-mcp-server.git
-cd selenium-mcp-server
-pip install -e .
-```
-
-The server uses `webdriver-manager` to automatically handle browser drivers, so you don't need to manually download ChromeDriver or GeckoDriver.
-
-## 🚀 Quick Start
-
-### 1. Install the Package
-
-```bash
-# From PyPI (recommended)
-pip install selenium-mcp-server
-
-# Or from source
-git clone https://github.com/krishnapollu/selenium-mcp-server.git
-cd selenium-mcp-server
-pip install -e .
-```
-
-### 2. Configure Your MCP Client
-
-#### For General Users (Recommended)
-
-**Option 1: Simple Configuration (if package is already installed)**
+Add this to your MCP client config (e.g., Cursor AI):
 ```json
 {
   "mcpServers": {
@@ -108,317 +60,284 @@ pip install -e .
 }
 ```
 
-**Option 2: Windows with Auto-Installation**
-```json
-{
-  "mcpServers": {
-    "selenium": {
-      "command": "powershell",
-      "args": ["-Command", "pip install --user selenium-mcp-server; python -m selenium_mcp_server"]
-    }
-  }
-}
-```
+---
 
-**Option 3: Linux/Mac with Auto-Installation**
-```json
-{
-  "mcpServers": {
-    "selenium": {
-      "command": "bash",
-      "args": ["-c", "pip install --user selenium-mcp-server && python -m selenium_mcp_server"]
-    }
-  }
-}
-```
+## 🏁 Getting Started
 
-#### For Developers (Local Installation)
+1. **Install**
+   ```bash
+   pip install selenium-mcp-server
+   ```
+2. **Run the server**
+   ```bash
+   python -m selenium_mcp_server
+   ```
+3. **Connect your MCP client** (see config above)
 
-If you have the code locally:
+**Windows users:** If you see a `.exe.deleteme` error, delete any `selenium-mcp-server.exe` or `.exe.deleteme` files in your Python `Scripts` directory, then retry the install. You can always run the server with `python -m selenium_mcp_server`.
 
-**Configuration Locations:**
-- **Cursor AI:** `%USERPROFILE%\.cursor\mcp_config.json` (Windows)
-- **Claude Desktop:** `%APPDATA%\claude-desktop\config.json` (Windows)
-- **Other MCP Clients:** Check your client's documentation
+---
 
-### 3. Test the Server
+## 🤖 Client Integration
 
-```bash
-# For general users
-pip install selenium-mcp-server
-python -m selenium_mcp_server
+- **Cursor AI:** `~/.cursor/mcp_config.json`
+- **Claude Desktop:** `~/.config/claude-desktop/config.json` (Linux/macOS) or `%APPDATA%\claude-desktop\config.json` (Windows)
+- **Other MCP Clients:** See your client's documentation
 
-# For developers
-python -m selenium_mcp_server
-```
+---
 
-**Note**: 
-- The package is now available on PyPI for easy installation
-- Works on any machine with Python installed
-- No need to download or clone the repository
-- Ready-to-use configuration files in `config/` directory
-
-## Available Tools
+## 🛠️ Available Tools & Examples
 
 ### Browser Management
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `start_browser` | Launch a new browser session | `browser`, `options`, `session_name` |
-| `list_sessions` | Show all active sessions | None |
-| `switch_session` | Switch to a different session | `session_id` |
-| `close_session` | Close a specific session | `session_id` (optional) |
+- **Start Browser**
+  ```json
+  { "browser": "chrome", "options": { "headless": true } }
+  ```
+- **List Sessions**
+  ```json
+  { "name": "list_sessions", "arguments": {} }
+  ```
+- **Switch Session**
+  ```json
+  { "session_id": "your-session-id" }
+  ```
+- **Close Session**
+  ```json
+  { "session_id": "your-session-id" }
+  ```
 
 ### Navigation & Page Info
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `navigate` | Go to a URL | `url`, `wait_for_load` |
-| `get_page_info` | Get page details | `include_title`, `include_url`, `include_source` |
+- **Navigate**
+  ```json
+  { "url": "https://example.com", "wait_for_load": true }
+  ```
+- **Get Page Info**
+  ```json
+  { "include_title": true, "include_url": true, "include_source": false }
+  ```
 
 ### Element Interaction
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `find_element` | Find an element | `by`, `value`, `timeout`, `wait_for_clickable` |
-| `click_element` | Click an element | `by`, `value`, `timeout`, `force_click` |
-| `send_keys` | Type text | `by`, `value`, `text`, `clear_first`, `type_speed` |
-| `get_element_text` | Get element text | `by`, `value`, `timeout` |
-| `wait_for_element` | Wait for element | `by`, `value`, `timeout`, `wait_for_visible` |
+- **Find Element**
+  ```json
+  { "by": "css", "value": "#my-element" }
+  ```
+- **Click Element**
+  ```json
+  { "by": "css", "value": "#my-button", "force_click": true }
+  ```
+- **Send Keys**
+  ```json
+  { "by": "css", "value": "#input", "text": "hello", "clear_first": true }
+  ```
+- **Get Element Text**
+  ```json
+  { "by": "css", "value": "#output" }
+  ```
+- **Hover**
+  ```json
+  { "by": "css", "value": "#hover-target" }
+  ```
+- **Drag and Drop**
+  ```json
+  { "by": "css", "value": "#source", "targetBy": "css", "targetValue": "#target" }
+  ```
+- **Double Click / Right Click**
+  ```json
+  { "by": "css", "value": "#element" }
+  ```
+- **Press Key**
+  ```json
+  { "key": "Enter" }
+  ```
+- **Upload File**
+  ```json
+  { "by": "css", "value": "input[type='file']", "filePath": "C:/Users/YourName/file.txt" }
+  ```
+- **Wait for Element**
+  ```json
+  { "by": "css", "value": "#wait-for-me", "wait_for_visible": true }
+  ```
 
 ### Advanced Actions
+- **Take Screenshot**
+  ```json
+  { "full_page": true }
+  ```
+- **Execute Script**
+  ```json
+  { "script": "return document.title;" }
+  ```
 
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `hover` | Hover over element | `by`, `value`, `timeout` |
-| `drag_and_drop` | Drag and drop | `by`, `value`, `targetBy`, `targetValue` |
-| `double_click` | Double click | `by`, `value`, `timeout` |
-| `right_click` | Right click | `by`, `value`, `timeout` |
-| `press_key` | Press keyboard key | `key` |
-| `execute_script` | Run JavaScript | `script`, `arguments` |
+---
 
-### File Operations
+## 📊 Example Automation Flow
 
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `upload_file` | Upload a file | `by`, `value`, `filePath`, `timeout` |
-| `take_screenshot` | Take screenshot | `outputPath`, `full_page` |
-
-## Real-World Examples
-
-### Example 1: Google Search Automation
-
-```json
-[
-  {
-    "name": "start_browser",
-    "arguments": {
-      "browser": "chrome",
-      "options": {"headless": false},
-      "session_name": "search_session"
-    }
-  },
-  {
-    "name": "navigate",
-    "arguments": {
-      "url": "https://www.google.com",
-      "wait_for_load": true
-    }
-  },
-  {
-    "name": "send_keys",
-    "arguments": {
-      "by": "name",
-      "value": "q",
-      "text": "Selenium automation tutorial",
-      "clear_first": true
-    }
-  },
-  {
-    "name": "press_key",
-    "arguments": {"key": "Enter"}
-  },
-  {
-    "name": "take_screenshot",
-    "arguments": {
-      "outputPath": "search_results.png",
-      "full_page": true
-    }
-  }
-]
+```mermaid
+flowchart TD
+  A["MCP Client (e.g., Cursor AI)"] -->|"Sends command"| B["Selenium MCP Server"]
+  B -->|"Controls"| C["Web Browser (Chrome/Firefox)"]
+  C -->|"Returns result"| B
+  B -->|"Responds via MCP"| A
 ```
 
-### Example 2: Multi-Session Workflow
+---
 
+## ⚙️ Advanced Configuration
+
+You can configure the Selenium MCP Server in several ways:
+
+### Option 1: Installed Package (Recommended)
 ```json
-[
-  {
-    "name": "start_browser",
-    "arguments": {
-      "browser": "chrome",
-      "session_name": "main"
-    }
-  },
-  {
-    "name": "start_browser",
-    "arguments": {
-      "browser": "firefox",
-      "options": {"headless": true},
-      "session_name": "background"
-    }
-  },
-  {
-    "name": "list_sessions",
-    "arguments": {}
-  }
-]
-```
-
-### Example 3: JavaScript Data Extraction
-
-```json
-[
-  {
-    "name": "navigate",
-    "arguments": {"url": "https://example.com"}
-  },
-  {
-    "name": "execute_script",
-    "arguments": {
-      "script": "return Array.from(document.querySelectorAll('h1, h2, h3')).map(h => h.textContent);"
+{
+  "mcpServers": {
+    "selenium": {
+      "command": "python",
+      "args": ["-m", "selenium_mcp_server"],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
     }
   }
-]
+}
 ```
 
-## Locator Strategies
+### Option 2: Direct File Execution
+- **Windows:**
+  ```json
+  {
+    "mcpServers": {
+      "selenium": {
+        "command": "python",
+        "args": ["C:\\path\\to\\selenium-mcp-server\\src\\selenium_mcp_server.py"],
+        "env": {
+          "PYTHONPATH": "C:\\path\\to\\selenium-mcp-server\\src",
+          "PYTHONUNBUFFERED": "1"
+        }
+      }
+    }
+  }
+  ```
+- **macOS/Linux:**
+  ```json
+  {
+    "mcpServers": {
+      "selenium": {
+        "command": "python",
+        "args": ["/path/to/selenium-mcp-server/src/selenium_mcp_server.py"],
+        "env": {
+          "PYTHONPATH": "/path/to/selenium-mcp-server/src",
+          "PYTHONUNBUFFERED": "1"
+        }
+      }
+    }
+  }
+  ```
 
-The server supports all standard Selenium locator strategies:
+### Option 3: Console Script
+```json
+{
+  "mcpServers": {
+    "selenium": {
+      "command": "selenium-mcp-server"
+    }
+  }
+}
+```
 
-- **`id`**: Find by element ID (fastest)
-- **`css`**: Find by CSS selector (most flexible)
-- **`xpath`**: Find by XPath (most powerful)
-- **`name`**: Find by name attribute
-- **`tag`**: Find by tag name
-- **`class`**: Find by class name
+---
 
-## Error Handling
+## 🌐 Environment Variables
+- `PYTHONUNBUFFERED=1`: Ensures Python output is not buffered
+- `SELENIUM_LOG_LEVEL=INFO`: Sets logging level (DEBUG, INFO, WARNING, ERROR)
+- `PYTHONPATH`: Points to the directory containing the Python modules (needed for direct file execution)
 
-The server provides meaningful error messages instead of generic failures:
+---
 
-- **⏰ Timeout errors**: When elements don't appear within the specified time
-- **🔍 Element not found**: When locators don't match any elements
-- **🖱️ Click intercepted**: When elements are covered by other elements
-- **🚫 Session errors**: When browser startup fails
+## 🧪 Testing Your Configuration
+After configuring, test with:
+```json
+{
+  "name": "list_sessions",
+  "arguments": {}
+}
+```
+You should get an empty list if no sessions are active.
 
-## Common Use Cases
+---
 
-### Web Scraping
-Use `execute_script` to extract data from complex pages, or `get_element_text` for simple text extraction.
+## ❓ FAQ / Troubleshooting
 
-### Form Automation
-Fill out forms with `send_keys`, handle file uploads, and submit with `click_element`.
+**Q: I see "0 tools enabled" in Cursor AI.**
+- Make sure the package is installed: `pip install selenium-mcp-server` (or `pip install -e .` for development)
+- Verify the module works:
+  ```bash
+  python -c "import selenium_mcp_server; print('Module found!')"
+  ```
+- Check if the entry point works:
+  ```bash
+  selenium-mcp-server --help
+  ```
+- Try using the console script entry point in your config.
 
-### Testing
-Take screenshots, verify element presence, and automate user workflows.
+**Q: "Module not found" errors**
+- Make sure you've installed the package: `pip install selenium-mcp-server` or `pip install -e .`
+- Check that the `PYTHONPATH` points to the correct directory if running from source
+- Verify the file paths are correct for your system
 
-### Monitoring
-Set up automated checks that navigate to pages and verify content.
+**Q: "Command not found" errors**
+- Ensure Python is in your system PATH
+- Try using the full path to Python: `C:\Python312\python.exe` (Windows) or `/usr/bin/python3` (Linux/macOS)
 
-## Troubleshooting
+**Q: Permission errors**
+- On Windows, try running your MCP client as administrator
+- On Linux/macOS, check file permissions: `chmod +x src/selenium_mcp_server.py`
 
-### Browser Won't Start
-- Make sure Chrome or Firefox is installed
-- Check that `webdriver-manager` can access the internet
-- Try running with `headless: false` to see what's happening
+**Q: I get a `.exe.deleteme` error on Windows when upgrading.**
+- Close all terminals, delete any `selenium-mcp-server.exe` or `.exe.deleteme` files in your Python `Scripts` directory, and retry the install. You can always run the server with `python -m selenium_mcp_server`.
 
-### Elements Not Found
-- Double-check your locator strategy and value
-- Use browser dev tools to verify the element exists
-- Try increasing the timeout value
-- Use `wait_for_element` to ensure the page is fully loaded
+**Q: How do I check the server version?**
+- The server prints its version on startup. You can also check with `pip show selenium-mcp-server`.
 
-### Permission Issues
-- Ensure the script has write permissions for screenshot directories
-- Use absolute paths for file uploads
+**Q: Can I use this with headless browsers?**
+- Yes! The server supports both headless and full browser modes.
 
-### Performance Issues
-- Use headless mode for faster execution
-- Close unused sessions with `close_session`
-- Consider using `type_speed` to avoid being detected as a bot
+**Q: How do I contribute or report issues?**
+- See the Contributing section below.
+
+---
+
+## 🤝 Contributing
+- Fork the repo and create a feature branch
+- Make your changes (see `src/selenium_mcp_server/`)
+- Add/modify tests if needed
+- Open a pull request with a clear description
+- For issues, use the [GitHub Issues](https://github.com/krishnapollu/selenium-mcp-server/issues) tab
+
+---
+
+## 🗒️ Changelog
+- **1.1.6**: Improved error handling, updated dependencies, enhanced Windows compatibility
+- **1.1.5**: Simplified packaging, removed legacy scripts, improved docs
+- **1.1.4 and earlier**: Initial releases, core MCP and Selenium features
+
+---
 
 ## Project Structure
+- All source code is in `src/selenium_mcp_server/`
+- No unnecessary files or scripts in the root or src directory
+- The package is fully PEP 517/518 compliant and ready for PyPI distribution
 
-```
-selenium-mcp-server/
-├── src/                    # Source code
-│   ├── selenium_mcp_server.py
-│   ├── main.py            # Main entry point
-│   └── run_server.py      # Server runner
-├── scripts/                # Utility scripts
-│   ├── cleanup.py         # Cleanup utility
-│   └── install_dependencies.py # Dependency installer
-├── tests/                  # Test files
-│   ├── run_tests.py       # Test runner
-│   └── *.py              # Individual tests
-├── docs/                   # Documentation
-├── examples/               # Example usage
-├── config/                 # Configuration files
-├── README.md              # Main documentation
-├── requirements.txt       # Dependencies
-├── setup.py               # Package setup
-└── .gitignore             # Git exclusions
-```
-
-## Development
-
-### Running Tests
-```bash
-# Use the test runner (recommended)
-python tests/run_tests.py
-
-# Or run individual tests
-python tests/interactive_test.py
-python tests/test_browser_management.py
-python tests/test_error_handling.py
-python tests/test_selenium_mcp.py
-```
-
-### Utility Scripts
-```bash
-# Install dependencies
-python scripts/install_dependencies.py
-
-# Clean up project
-python scripts/cleanup.py
-```
-
-### Continuous Integration
-
-This project includes GitHub Actions CI that automatically runs tests on every push and pull request. The CI workflow:
-
-- ✅ Tests server initialization
-- ✅ Tests basic browser functionality
-- ✅ Tests error handling
-- ✅ Checks Python syntax
-- ✅ Tests package installation
-- ✅ Runs on Ubuntu with Chrome and Firefox
-
-See `.github/workflows/ci.yml` for details.
-
-### Debug Mode
-Enable detailed logging by modifying the logging level in the script:
-```python
-logging.basicConfig(level=logging.DEBUG)
-```
-
-## Contributing
-
-Found a bug? Have an idea for a new feature? Feel free to open an issue or submit a pull request. This project is actively maintained and welcomes contributions.
+---
 
 ## License
-
 MIT License - feel free to use this in your own projects.
+
+---
+
+## Contact & Support
+- For questions, open a [GitHub Issue](https://github.com/krishnapollu/selenium-mcp-server/issues)
+- For discussions, feature requests, or help, use the GitHub Discussions or Issues
+- Maintained by [Krishna Pollu](https://github.com/krishnapollu)
 
 ---
 
