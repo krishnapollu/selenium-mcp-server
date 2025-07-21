@@ -155,7 +155,7 @@ jobs:
         
     - name: Check syntax
       run: |
-        python -m py_compile src/selenium_mcp_server.py
+        python -m py_compile src/selenium_mcp_server/selenium_mcp_server.py
         python -m py_compile tests/*.py
         echo "✅ All Python files compile successfully"
         
@@ -163,7 +163,7 @@ jobs:
       run: |
         pip install -e .
         python -c "
-        from src.selenium_mcp_server import SeleniumMCPServer
+        from selenium_mcp_server import SeleniumMCPServer
         server = SeleniumMCPServer()
         print('✅ Package installation test passed')
         print('✅ Server can be imported and initialized')
